@@ -2,6 +2,7 @@
 [![npm version](https://badge.fury.io/js/redux-di-middleware.svg)](https://badge.fury.io/js/redux-di-middleware)
 [![Build Status](https://travis-ci.org/gallayl/redux-di-middleware.svg?branch=master)](https://travis-ci.org/gallayl/redux-di-middleware)
 [![codecov](https://codecov.io/gh/gallayl/redux-di-middleware/branch/master/graph/badge.svg)](https://codecov.io/gh/gallayl/redux-di-middleware)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/cd3c4876c52d41c6919e892e76d43e7e)](https://www.codacy.com/app/gallayl/redux-di-middleware?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=gallayl/redux-di-middleware&amp;utm_campaign=Badge_Grade)
 [![Greenkeeper badge](https://badges.greenkeeper.io/gallayl/redux-di-middleware.svg)](https://greenkeeper.io/)
 
 # redux-di-middleware
