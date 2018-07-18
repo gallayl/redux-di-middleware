@@ -20,7 +20,7 @@
     "prebuild": "tslint --project tsconfig.json",
     "build": "rimraf dist && tsc -p tsconfig.json",
     "prepublishOnly": "npm run test && npm run build",
-    "publish:development": "npm run build && npm t && npm run typedoc && npm publish --tag development",
+    "publish:development": "npm run build && npm t && npm run typedoc && npm publish --tag development"
   },
   "repository": {
     "type": "git",
