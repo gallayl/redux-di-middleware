@@ -3,7 +3,12 @@ import { Action, applyMiddleware, createStore, Reducer } from "redux";
 import { defaultContainerName, InjectableAction, ReduxDiMiddleware } from "../src/index";
 
 export class ExampleInjectable {
-    constructor(public readonly value: string) { }
+
+    public async getValueAsync(...args: any[]) {
+        return true;
+    }
+
+    constructor(public readonly value?: string) { }
 }
 
 export const tests = describe("ReduxDiMiddleware", () => {
@@ -69,13 +74,45 @@ export const tests = describe("ReduxDiMiddleware", () => {
                 inject: (options) => {
                     expect(options.getState()).to.be.deep.eq({ value: "asd" });
                     expect(options.getInjectable(ExampleInjectable).value).to.be.eq("asdddd");
+                    options.dispatch({ type: "AAA" });
                     done();
                 },
             });
-
             store.dispatch({ type: "AAA" });
-
             store.dispatch(action);
+        });
+
+        it("Should be work with a readme example", () => {
+            const di = new ReduxDiMiddleware();
+            const injectableService = new ExampleInjectable();
+
+            di.setInjectable(injectableService);
+            const store = createStore(mockReducer, applyMiddleware(di.getMiddleware()));
+
+            const exampleAction: InjectableAction<{ state: { value: string } }, Action> = ({
+                type: "DO_SOMETHING",
+                inject: async (options) => {
+                    // gets the preconfigured injected instance
+                    const service = options.getInjectable(ExampleInjectable);
+
+                    // gets the current state
+                    const currentState = options.getState();
+                    try {
+                        const value = await service.getValueAsync(currentState.state.value);
+
+                        // dispatch an another action on the store with a result
+                        options.dispatch({
+                            type: "DO_SOMETHING_FINISHED",
+                            value,
+                        });
+                    } catch (error) {
+                        options.dispatch({
+                            type: "DO_SOMETHING_FAILED",
+                            error,
+                        });
+                    }
+                },
+            });
         });
     });
 
