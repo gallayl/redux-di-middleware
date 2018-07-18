@@ -44,9 +44,9 @@ export class ReduxDiMiddleware {
     public getMiddleware: () => Middleware = () => (api) => (next) => (action: InjectableAction<{}, Action>) => {
         if (isInjectableAction(action)) {
             return action.inject({
-                dispatch: api.dispatch,
-                getState: api.getState,
-                getInjectable: this.getInjectable,
+                dispatch: (a) => api.dispatch(a),
+                getState: () => api.getState(),
+                getInjectable: (...args) => this.getInjectable(...args),
             });
         } else {
             return next(action);
