@@ -1,6 +1,6 @@
 {
   "name": "redux-di-middleware",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Dependency injection middleware for Redux",
   "main": "dist/index.js",
   "files": [
