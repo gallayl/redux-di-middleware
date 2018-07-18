@@ -1,0 +1,70 @@
+{
+  "name": "redux-di-middleware",
+  "version": "1.0.1",
+  "description": "Dependency injection middleware for Redux",
+  "main": "dist/index.js",
+  "files": [
+    "dist",
+    "src",
+    "test"
+  ],
+  "scripts": {
+    "precommit": "npm run test",
+    "commit": "git-cz",
+    "pretest": "npm run build:test",
+    "test": "rimraf coverage && nyc mocha -p tsconfig.test.json ./temp/test/index.js",
+    "check-coverage": "istanbul check-coverage ",
+    "report-coverage": "cat ./coverage/lcov.info | ./node_modules/.bin/codecov",
+    "semantic-release": "semantic-release pre && semantic-release post",
+    "build:test": "tslint --project tsconfig.test.json && rimraf temp && tsc -p tsconfig.test.json",
+    "prebuild": "tslint --project tsconfig.json",
+    "build": "rimraf dist && tsc -p tsconfig.json",
+    "prepublishOnly": "npm run test && npm run build",
+    "publish:development": "npm run build && npm t && npm run typedoc && npm publish --tag development",
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gallayl/redux-di-middleware.git"
+  },
+  "keywords": [
+    "redux",
+    "dependency injection"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "https://github.com/gallayl/redux-di-middleware",
+  "license": "GPL-2.0",
+  "bugs": {
+    "url": "https://github.com/gallayl/redux-di-middleware/issues"
+  },
+  "nyc": {
+    "exclude": [
+      "temp/test/**/*.*",
+      "temp/src/**/I*.js"
+    ],
+    "include": "temp/src/**/*.*",
+    "check-coverage": true,
+    "cache": true,
+    "all": true,
+    "reporter": [
+      "lcov",
+      "text-summary",
+      "json"
+    ]
+  },
+  "homepage": "https://github.com/gallayl/redux-di-middleware",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/chai": "^4.1.4",
+    "@types/mocha": "^5.2.5",
+    "@types/redux": "^3.6.0",
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0",
+    "nyc": "^12.0.2",
+    "rimraf": "^2.6.2",
+    "tslint": "^5.11.0",
+    "typescript": "^3.0.0-rc"
+  },
+  "typings": "./dist/index.d.ts"
+}
