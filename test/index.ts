@@ -2,6 +2,7 @@ import { expect } from "chai";
 import { Action, applyMiddleware, createStore, Reducer } from "redux";
 import { defaultContainerName, InjectableAction, ReduxDiMiddleware } from "../src/index";
 
+// tslint:disable:completed-docs
 export class ExampleInjectable {
 
     public async getValueAsync(...args: any[]) {

@@ -21,16 +21,28 @@ export interface InjectableAction<TState, TAction extends Action> extends Action
     inject: IInjectableActionCallback<TState, TAction>;
 }
 
+/**
+ * Type guard for checking if the given action is an InjectableAction
+ * @param action The action to check
+ */
 export const isInjectableAction = <TState, TAction extends Action>(action: any): action is InjectableAction<TState, TAction> => {
     return action && action.inject && typeof action.inject === "function";
 };
 
+/**
+ * Class for managing the Middleware, the DI containers and the registered injectable instances
+ */
 export class ReduxDiMiddleware {
     private readonly containers: Map<string, Map<string, any>> = new Map<string, Map<string, any>>([
         [defaultContainerName, new Map<string, any>()] as [string, Map<string, any>],
     ]);
 
-    public setInjectable<T>(value: T, containerName: string = defaultContainerName) {
+    /**
+     * Registers an instantiated object into a DI Container that can be used as a singleton in the Actions.
+     * @param value The value for specifying a singleton into the DI container. Have to be a constructed object.
+     * @param containerName The container name, falls back to default if not provided
+     */
+    public setInjectable<T>(value: T & {constructor: {name: string}}, containerName: string = defaultContainerName) {
         let container!: Map<string, any>;
         if (!this.containers.has(containerName)) {
             this.containers.set(containerName, new Map());
@@ -39,6 +51,12 @@ export class ReduxDiMiddleware {
         container.set(value.constructor.name, value);
     }
 
+    /**
+     * Returns a registered injectable object.
+     * @throws when no DI Container is registered or no entity is registered in the specified container from the type
+     * @param injectableType The Injectable type
+     * @param containerName The container name, falls back to the default container if not provided
+     */
     public getInjectable<T>(injectableType: { new(...args: any[]): T }, containerName: string = defaultContainerName) {
         if (this.containers.has(containerName)) {
             const container = this.containers.get(containerName) as Map<string, any>;
@@ -50,6 +68,9 @@ export class ReduxDiMiddleware {
         throw Error(`No container found with name '${containerName}'`);
     }
 
+    /**
+     * Returns the Redux Middleware that can be used in the Redux Store
+     */
     public getMiddleware: () => Middleware = () => (api) => (next) => (action: InjectableAction<{}, Action>) => {
         if (isInjectableAction(action)) {
             return action.inject({
