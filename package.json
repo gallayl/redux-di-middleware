@@ -14,7 +14,6 @@
     "pretest": "npm run build:test",
     "test": "rimraf coverage && nyc mocha -p tsconfig.test.json ./temp/test/index.js",
     "check-coverage": "istanbul check-coverage ",
-    "report-coverage": "cat ./coverage/lcov.info | ./node_modules/.bin/codecov",
     "semantic-release": "semantic-release pre && semantic-release post",
     "build:test": "tslint --project tsconfig.test.json && rimraf temp && tsc -p tsconfig.test.json",
     "prebuild": "tslint --project tsconfig.json",
