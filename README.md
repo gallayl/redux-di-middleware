@@ -2,7 +2,7 @@
 A redux middleware for dependency injection and async operations, written in Typescript
 
 [![Build Status](https://travis-ci.org/gallayl/redux-di-middleware.svg?branch=master)](https://travis-ci.org/gallayl/redux-di-middleware)
-[![codecov](https://codecov.io/gh/gallayl/redux-di-middleware/branch/master/graph/badge.svg)](https://codecov.io/gh/gallayl/redux-di-middleware)
+[![codecov](https://codecov.io/gh/gallayl/redux-di-middleware/branch/master/graph/badge.svg)](https://codecov.io/gh/gallayl/redux-di-middleware) [![Greenkeeper badge](https://badges.greenkeeper.io/gallayl/redux-di-middleware.svg)](https://greenkeeper.io/)
 
 
 ## Install
