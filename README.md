@@ -1,4 +1,5 @@
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/e5f49807dba94c57906e4e115c7179a5)](https://app.codacy.com/app/gallayl/redux-di-middleware?utm_source=github.com&utm_medium=referral&utm_content=gallayl/redux-di-middleware&utm_campaign=badger)
 [![npm version](https://badge.fury.io/js/redux-di-middleware.svg)](https://badge.fury.io/js/redux-di-middleware)
 [![Build Status](https://travis-ci.org/gallayl/redux-di-middleware.svg?branch=master)](https://travis-ci.org/gallayl/redux-di-middleware)
 [![codecov](https://codecov.io/gh/gallayl/redux-di-middleware/branch/master/graph/badge.svg)](https://codecov.io/gh/gallayl/redux-di-middleware)
