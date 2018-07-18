@@ -1,13 +1,22 @@
 import { Action, Dispatch, Middleware } from "redux";
 
+/**
+ * The default container name. Will be used if not specified otherwise
+ */
 export const defaultContainerName = "default";
 
+/**
+ * Type for an injectable action callback
+ */
 export type IInjectableActionCallback<TState, TAction extends Action> = (options: {
     getState: () => TState,
     dispatch: Dispatch<TAction>,
     getInjectable: <TInjectable>(injectableType: { new(...args: any[]): TInjectable }, containerName?: string) => TInjectable,
 }) => any;
 
+/**
+ * Interface for Injectable Action definition
+ */
 export interface InjectableAction<TState, TAction extends Action> extends Action {
     inject: IInjectableActionCallback<TState, TAction>;
 }

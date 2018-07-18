@@ -22,15 +22,15 @@
         "completed-docs": [
             true,
             {
-                // "classes": { "visibilities": ["exported"] },
-                // "enums": { "visibilities": ["exported"] },
-                // "enum-members": { "visibilities": ["exported"] },
-                // "functions": { "visibilities": ["exported"] },
-                // "interfaces": { "visibilities": ["exported"] },
-                // "properties": { "privacies": ["public", "protected"] },
-                // "methods": { "privacies": ["public", "protected"], "tags": { "content": {}, "existence": ["inheritdoc"] } },
-                // "types": { "visibilities": ["exported"] },
-                // "variables": { "visibilities": ["exported"] }
+                "classes": { "visibilities": ["exported"] },
+                "enums": { "visibilities": ["exported"] },
+                "enum-members": { "visibilities": ["exported"] },
+                "functions": { "visibilities": ["exported"] },
+                "interfaces": { "visibilities": ["exported"] },
+                "properties": { "privacies": ["public", "protected"] },
+                "methods": { "privacies": ["public", "protected"], "tags": { "content": {}, "existence": ["inheritdoc"] } },
+                "types": { "visibilities": ["exported"] },
+                "variables": { "visibilities": ["exported"] }
             }
         ]
     },
