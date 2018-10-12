@@ -1,9 +1,5 @@
+import { Constructable, Injector } from "@furystack/inject";
 import { Action, Dispatch, Middleware } from "redux";
-
-/**
- * The default container name. Will be used if not specified otherwise
- */
-export const defaultContainerName = "default";
 
 /**
  * Type for an injectable action callback
@@ -11,7 +7,7 @@ export const defaultContainerName = "default";
 export type IInjectableActionCallback<TState, TAction extends Action> = (options: {
     getState: () => TState,
     dispatch: Dispatch<TAction>,
-    getInjectable: <TInjectable>(injectableType: { new(...args: any[]): TInjectable }, containerName?: string) => TInjectable,
+    getInjectable: <TInjectable>(injectableType: Constructable<TInjectable>) => TInjectable,
 }) => any;
 
 /**
@@ -30,42 +26,28 @@ export const isInjectableAction = <TState, TAction extends Action>(action: any):
 };
 
 /**
- * Class for managing the Middleware, the DI containers and the registered injectable instances
+ * Class for managing the Middleware and the registered injectable instances
  */
 export class ReduxDiMiddleware {
-    private readonly containers: Map<string, Map<string, any>> = new Map<string, Map<string, any>>([
-        [defaultContainerName, new Map<string, any>()] as [string, Map<string, any>],
-    ]);
+
+    private readonly injector: Injector = new Injector({parent: undefined, scope: {}});
 
     /**
      * Registers an instantiated object into a DI Container that can be used as a singleton in the Actions.
      * @param value The value for specifying a singleton into the DI container. Have to be a constructed object.
-     * @param containerName The container name, falls back to default if not provided
+     * @param key The key for setting the instance value
      */
-    public setInjectable<T>(value: T & {constructor: {name: string}}, containerName: string = defaultContainerName) {
-        let container!: Map<string, any>;
-        if (!this.containers.has(containerName)) {
-            this.containers.set(containerName, new Map());
-        }
-        container = this.containers.get(containerName) as Map<string, any>;
-        container.set(value.constructor.name, value);
+    public setInjectable<T>(value: T, key?: string) {
+        this.injector.SetInstance(value, key);
     }
 
     /**
      * Returns a registered injectable object.
      * @throws when no DI Container is registered or no entity is registered in the specified container from the type
      * @param injectableType The Injectable type
-     * @param containerName The container name, falls back to the default container if not provided
      */
-    public getInjectable<T>(injectableType: { new(...args: any[]): T }, containerName: string = defaultContainerName) {
-        if (this.containers.has(containerName)) {
-            const container = this.containers.get(containerName) as Map<string, any>;
-            if (container.has(injectableType.name)) {
-                return container.get(injectableType.name) as T;
-            }
-            throw Error(`Injectable not found for '${injectableType.name}' in the container '${containerName}'`);
-        }
-        throw Error(`No container found with name '${containerName}'`);
+    public getInjectable<T>(injectableType: Constructable<T>) {
+        return this.injector.GetInstance(injectableType);
     }
 
     /**
@@ -76,7 +58,7 @@ export class ReduxDiMiddleware {
             return action.inject({
                 dispatch: (a) => api.dispatch(a),
                 getState: () => api.getState(),
-                getInjectable: (...args) => this.getInjectable(...args),
+                getInjectable: <T>(value: Constructable<T>) => this.getInjectable(value),
             });
         } else {
             return next(action);

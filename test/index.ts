@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { Action, applyMiddleware, createStore, Reducer } from "redux";
-import { defaultContainerName, InjectableAction, ReduxDiMiddleware } from "../src/index";
+import { InjectableAction, ReduxDiMiddleware } from "../src/index";
 
 // tslint:disable:completed-docs
 export class ExampleInjectable {
@@ -24,41 +24,6 @@ export const tests = describe("ReduxDiMiddleware", () => {
             const injectable = new ExampleInjectable("asd");
             m.setInjectable(injectable);
             expect(injectable).to.be.eq(m.getInjectable(ExampleInjectable));
-        });
-
-        it("Should be added to another container", () => {
-            const m = new ReduxDiMiddleware();
-            const injectable = new ExampleInjectable("asd");
-            m.setInjectable(injectable, "container2");
-            expect(injectable).to.be.eq(m.getInjectable(ExampleInjectable, "container2"));
-
-            // tslint:disable-next-line:no-string-literal
-            expect((m["containers"].get(defaultContainerName) as any).size).to.be.eq(0);
-        });
-
-        it("Should throw an error if no injectable is available in the container", () => {
-            const m = new ReduxDiMiddleware();
-            expect(() => m.getInjectable(ExampleInjectable)).to.throws();
-        });
-    });
-
-    describe("Containers", () => {
-        it("Should define its own default container", () => {
-            const m = new ReduxDiMiddleware();
-            // tslint:disable-next-line:no-string-literal
-            expect(m["containers"].has(defaultContainerName)).to.be.eq(true);
-        });
-
-        it("Should be created lazily on adding a new entry", () => {
-            const m = new ReduxDiMiddleware();
-            m.setInjectable(new ExampleInjectable("alma"), "container2");
-            // tslint:disable-next-line:no-string-literal
-            expect(m["containers"].has("container2")).to.be.eq(true);
-        });
-
-        it("Should throw meaningful error when try to get value from an undefined container", () => {
-            const m = new ReduxDiMiddleware();
-            expect(() => m.getInjectable(ExampleInjectable, "container2")).to.throws();
         });
     });
 
