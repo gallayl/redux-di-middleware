@@ -30,7 +30,11 @@ export const isInjectableAction = <TState, TAction extends Action>(action: any):
  */
 export class ReduxDiMiddleware {
 
-    private readonly injector: Injector = new Injector({parent: undefined, scope: {}});
+    /**
+     *
+     */
+    constructor(private readonly injector: Injector = Injector.Default) {
+    }
 
     /**
      * Registers an instantiated object into a DI Container that can be used as a singleton in the Actions.
