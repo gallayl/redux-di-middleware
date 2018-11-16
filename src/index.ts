@@ -41,7 +41,7 @@ export class ReduxDiMiddleware {
      * @param value The value for specifying a singleton into the DI container. Have to be a constructed object.
      * @param key The key for setting the instance value
      */
-    public setInjectable<T>(value: T, key?: string) {
+    public setInjectable<T>(value: T, key?: Constructable<T>) {
         this.injector.SetInstance(value, key);
     }
 
