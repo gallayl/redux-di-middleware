@@ -1,46 +1,50 @@
 import { Constructable, Injector } from "@furystack/inject";
-import { Action, Dispatch, Middleware } from "redux";
+import { Dispatch, Middleware } from "redux";
+
+/**
+ * Interface for defining the example action callback parameters
+ */
+export interface IInjectableActionCallbackParams<TState> {
+  /**
+   * Returns the current state of the store
+   */
+  getState: () => TState;
+  /**
+   * Dispatches an action on the current store
+   */
+  dispatch: Dispatch;
+  /**
+   * Returns an injectable instance
+   */
+  getInjectable: <TInjectable>(
+    injectableType: Constructable<TInjectable>,
+  ) => TInjectable;
+}
 
 /**
  * Type for an injectable action callback
  */
-export type IInjectableActionCallback<TState, TAction extends Action> = (
-  options: {
-    /**
-     * Returns the current state of the store
-     */
-    getState: () => TState;
-    /**
-     * Dispatches an action on the current store
-     */
-    dispatch: Dispatch<TAction>;
-    /**
-     * Returns an injectable instance
-     */
-    getInjectable: <TInjectable>(
-      injectableType: Constructable<TInjectable>,
-    ) => TInjectable;
-  },
+export type IInjectableActionCallback<TState> = (
+  options: IInjectableActionCallbackParams<TState>,
 ) => any;
 
 /**
  * Interface for Injectable Action definition
  */
-export interface InjectableAction<TState, TAction extends Action>
-  extends Action {
+export interface InjectableAction<TState> {
   /**
    * Method that can be called and will be executed
    */
-  inject: IInjectableActionCallback<TState, TAction>;
+  inject: IInjectableActionCallback<TState>;
 }
 
 /**
  * Type guard for checking if the given action is an InjectableAction
  * @param action The action to check
  */
-export const isInjectableAction = <TState, TAction extends Action>(
+export const isInjectableAction = <TState>(
   action: any,
-): action is InjectableAction<TState, TAction> => {
+): action is InjectableAction<TState> => {
   return action && action.inject && typeof action.inject === "function";
 };
 
@@ -75,7 +79,7 @@ export class ReduxDiMiddleware {
    * Returns the Redux Middleware that can be used in the Redux Store
    */
   public getMiddleware: () => Middleware = () => (api) => (next) => (
-    action: InjectableAction<{}, Action>,
+    action: InjectableAction<{}>,
   ) => {
     if (isInjectableAction(action)) {
       return action.inject({

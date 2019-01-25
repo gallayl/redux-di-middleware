@@ -1,85 +1,99 @@
 import { expect } from "chai";
 import { Action, applyMiddleware, createStore, Reducer } from "redux";
-import { InjectableAction, ReduxDiMiddleware } from "../src/index";
+import {
+  IInjectableActionCallbackParams,
+  InjectableAction,
+  ReduxDiMiddleware,
+} from "../src/index";
 
 // tslint:disable:completed-docs
 export class ExampleInjectable {
+  public async getValueAsync(...args: any[]) {
+    return true;
+  }
 
-    public async getValueAsync(...args: any[]) {
-        return true;
-    }
-
-    constructor(public readonly value?: string) { }
+  constructor(public readonly value?: string) {}
 }
 
 export const tests = describe("ReduxDiMiddleware", () => {
-    it("Can be constructed", () => {
-        const m = new ReduxDiMiddleware();
-        expect(m).to.be.instanceof(ReduxDiMiddleware);
+  it("Can be constructed", () => {
+    const m = new ReduxDiMiddleware();
+    expect(m).to.be.instanceof(ReduxDiMiddleware);
+  });
+
+  describe("Injectables", () => {
+    it("Should be added to default container", () => {
+      const m = new ReduxDiMiddleware();
+      const injectable = new ExampleInjectable("asd");
+      m.setInjectable(injectable);
+      expect(injectable).to.be.eq(m.getInjectable(ExampleInjectable));
+    });
+  });
+
+  describe("middleware", () => {
+    const mockReducer: Reducer<{ value: string }, Action> = (
+      state = { value: "asd" },
+      action: Action,
+    ) => state;
+
+    it("Should be registered into a Redux store", (done: MochaDone) => {
+      const m = new ReduxDiMiddleware();
+      m.setInjectable(new ExampleInjectable("asdddd"));
+      const store = createStore(
+        mockReducer,
+        applyMiddleware(m.getMiddleware()),
+      );
+      const action = {
+        type: "AAA",
+        inject: (options: IInjectableActionCallbackParams<any>) => {
+          expect(options.getState()).to.be.deep.eq({ value: "asd" });
+          expect(options.getInjectable(ExampleInjectable).value).to.be.eq(
+            "asdddd",
+          );
+          options.dispatch({ type: "AAA" });
+          done();
+        },
+      };
+      store.dispatch({ type: "AAA" });
+      store.dispatch(action);
     });
 
-    describe("Injectables", () => {
-        it("Should be added to default container", () => {
-            const m = new ReduxDiMiddleware();
-            const injectable = new ExampleInjectable("asd");
-            m.setInjectable(injectable);
-            expect(injectable).to.be.eq(m.getInjectable(ExampleInjectable));
-        });
-    });
+    it("Should be work with a readme example", () => {
+      const di = new ReduxDiMiddleware();
+      const injectableService = new ExampleInjectable();
 
-    describe("middleware", () => {
+      di.setInjectable(injectableService);
+      const store = createStore(
+        mockReducer,
+        applyMiddleware(di.getMiddleware()),
+      );
 
-        const mockReducer: Reducer<{ value: string }, Action> = (state = { value: "asd" }, action: Action) => state;
+      const exampleAction = {
+        type: "DO_SOMETHING",
+        inject: async (
+          options: IInjectableActionCallbackParams<{ state: { value: string } }>,
+        ) => {
+          // gets the preconfigured injected instance
+          const service = options.getInjectable(ExampleInjectable);
 
-        it("Should be registered into a Redux store", (done: MochaDone) => {
-            const m = new ReduxDiMiddleware();
-            m.setInjectable(new ExampleInjectable("asdddd"));
-            const store = createStore(mockReducer, applyMiddleware(m.getMiddleware()));
-            const action: InjectableAction<any, Action> = ({
-                type: "AAA",
-                inject: (options) => {
-                    expect(options.getState()).to.be.deep.eq({ value: "asd" });
-                    expect(options.getInjectable(ExampleInjectable).value).to.be.eq("asdddd");
-                    options.dispatch({ type: "AAA" });
-                    done();
-                },
+          // gets the current state
+          const currentState = options.getState();
+          try {
+            const value = await service.getValueAsync(currentState.state.value);
+
+            // dispatch an another action on the store with a result
+            options.dispatch({
+              type: "DO_SOMETHING_FINISHED",
+              value,
             });
-            store.dispatch({ type: "AAA" });
-            store.dispatch(action);
-        });
-
-        it("Should be work with a readme example", () => {
-            const di = new ReduxDiMiddleware();
-            const injectableService = new ExampleInjectable();
-
-            di.setInjectable(injectableService);
-            const store = createStore(mockReducer, applyMiddleware(di.getMiddleware()));
-
-            const exampleAction: InjectableAction<{ state: { value: string } }, Action> = ({
-                type: "DO_SOMETHING",
-                inject: async (options) => {
-                    // gets the preconfigured injected instance
-                    const service = options.getInjectable(ExampleInjectable);
-
-                    // gets the current state
-                    const currentState = options.getState();
-                    try {
-                        const value = await service.getValueAsync(currentState.state.value);
-
-                        // dispatch an another action on the store with a result
-                        options.dispatch({
-                            type: "DO_SOMETHING_FINISHED",
-                            value,
-                        });
-                    } catch (error) {
-                        options.dispatch({
-                            type: "DO_SOMETHING_FAILED",
-                            error,
-                        });
-                    }
-                },
+          } catch (error) {
+            options.dispatch({
+              type: "DO_SOMETHING_FAILED",
+              error,
             });
-        });
+          }
+        },
+      };
     });
-
+  });
 });
