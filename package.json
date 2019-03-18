@@ -1,6 +1,6 @@
 {
   "name": "redux-di-middleware",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "Dependency injection middleware for Redux",
   "main": "dist/index.js",
   "files": [
@@ -54,19 +54,21 @@
   },
   "homepage": "https://github.com/gallayl/redux-di-middleware",
   "dependencies": {
-    "@furystack/inject": "^1.0.9",
-    "redux": "^4.0.1"
+    "@furystack/inject": "^3.0.0",
+    "redux": "^4.0.1",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-consistent-codestyle": "^1.15.1"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
-    "@types/mocha": "^5.2.5",
+    "@types/mocha": "^5.2.6",
     "@types/redux": "^3.6.0",
     "chai": "^4.2.0",
     "mocha": "^5.2.0",
-    "nyc": "^13.1.0",
+    "nyc": "^13.3.0",
     "rimraf": "^2.6.3",
-    "tslint": "^5.12.1",
-    "typescript": "^3.2.4"
+    "tslint": "^5.14.0",
+    "typescript": "^3.3.3333"
   },
   "typings": "./dist/index.d.ts"
 }
