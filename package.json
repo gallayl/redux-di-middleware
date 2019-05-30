@@ -54,21 +54,20 @@
   },
   "homepage": "https://github.com/gallayl/redux-di-middleware",
   "dependencies": {
-    "@furystack/inject": "^3.0.1",
-    "redux": "^4.0.1",
-    "tslint-config-prettier": "^1.18.0",
-    "tslint-consistent-codestyle": "^1.15.1"
+    "@furystack/inject": "^3.0.7",
+    "redux": "^4.0.1"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
     "@types/mocha": "^5.2.6",
-    "@types/redux": "^3.6.0",
     "chai": "^4.2.0",
-    "mocha": "^5.2.0",
-    "nyc": "^13.3.0",
+    "mocha": "^6.1.4",
+    "nyc": "^14.1.1",
     "rimraf": "^2.6.3",
-    "tslint": "^5.15.0",
-    "typescript": "^3.4.3"
+    "tslint": "^5.16.0",
+    "typescript": "^3.5.1",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-consistent-codestyle": "^1.15.1"
   },
   "typings": "./dist/index.d.ts"
 }

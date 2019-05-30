@@ -1,5 +1,5 @@
 import { Constructable, Injector } from '@furystack/inject'
-import { Dispatch, Middleware } from 'redux'
+import { AnyAction, Dispatch, Middleware } from 'redux'
 
 /**
  * Interface for defining the example action callback parameters
@@ -27,7 +27,7 @@ export type IInjectableActionCallback<TState> = (options: IInjectableActionCallb
 /**
  * Interface for Injectable Action definition
  */
-export interface InjectableAction<TState> {
+export interface InjectableAction<TState> extends AnyAction {
   /**
    * Method that can be called and will be executed
    */
@@ -56,7 +56,7 @@ export class ReduxDiMiddleware {
    * @param value The value for specifying a singleton into the DI container. Have to be a constructed object.
    * @param key The key for setting the instance value
    */
-  public setInjectable<T>(value: T, key?: Constructable<T>) {
+  public setInjectable<T extends object>(value: T, key?: Constructable<T>) {
     this.injector.setExplicitInstance(value, key)
   }
 
