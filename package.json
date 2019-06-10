@@ -54,7 +54,7 @@
   },
   "homepage": "https://github.com/gallayl/redux-di-middleware",
   "dependencies": {
-    "@furystack/inject": "^3.0.7",
+    "@furystack/inject": "^3.0.8",
     "redux": "^4.0.1"
   },
   "devDependencies": {
